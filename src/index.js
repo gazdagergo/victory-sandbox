@@ -1,30 +1,99 @@
 import React from "react";
 import { render } from "react-dom";
-import { VictoryLine, VictoryChart, VictoryScatter } from "victory";
-
-const data = [
-  { x: 0, y: 0 },
-  { x: 1, y: 2 },
-  { x: 2, y: 1 },
-  { x: 3, y: 4 },
-  { x: 4, y: 3 },
-  { x: 5, y: 5 }
-];
+import {
+  VictoryZoomContainer,
+  VictoryChart,
+  VictoryBrushContainer,
+  VictoryAxis,
+  VictoryLine
+} from "victory";
 
 class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+
+  handleZoom(domain) {
+    this.setState({ selectedDomain: domain });
+  }
+
+  handleBrush(domain) {
+    this.setState({ zoomDomain: domain });
+  }
+
   render() {
     return (
       <div>
-        <VictoryChart height={290}>
+        <VictoryChart
+          width={600}
+          height={350}
+          scale={{ x: "time" }}
+          containerComponent={
+            <VictoryZoomContainer
+              responsive={false}
+              zoomDimension="x"
+              zoomDomain={this.state.zoomDomain}
+              onZoomDomainChange={this.handleZoom.bind(this)}
+            />
+          }
+        >
           <VictoryLine
-            interpolation="bundle"
-            data={data}
-            style={{ data: { stroke: "#c43a31" } }}
+            style={{
+              data: { stroke: "tomato" }
+            }}
+            data={[
+              { x: new Date(1982, 1, 1), y: 125 },
+              { x: new Date(1987, 1, 1), y: 257 },
+              { x: new Date(1993, 1, 1), y: 345 },
+              { x: new Date(1997, 1, 1), y: 515 },
+              { x: new Date(2001, 1, 1), y: 132 },
+              { x: new Date(2005, 1, 1), y: 305 },
+              { x: new Date(2011, 1, 1), y: 270 },
+              { x: new Date(2015, 1, 1), y: 470 }
+            ]}
           />
-          <VictoryScatter
-            data={data}
-            size={5}
-            style={{ data: { fill: "#c43a31" } }}
+        </VictoryChart>
+
+        <VictoryChart
+          padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+          width={600}
+          height={90}
+          scale={{ x: "time" }}
+          containerComponent={
+            <VictoryBrushContainer
+              responsive={false}
+              brushDimension="x"
+              brushDomain={this.state.selectedDomain}
+              onBrushDomainChange={this.handleBrush.bind(this)}
+            />
+          }
+        >
+          <VictoryAxis
+            tickValues={[
+              new Date(1985, 1, 1),
+              new Date(1990, 1, 1),
+              new Date(1995, 1, 1),
+              new Date(2000, 1, 1),
+              new Date(2005, 1, 1),
+              new Date(2010, 1, 1)
+            ]}
+            tickFormat={x => new Date(x).getFullYear()}
+          />
+          <VictoryLine
+            style={{
+              data: { stroke: "tomato" }
+            }}
+            data={[
+              { x: new Date(1982, 1, 1), y: 125 },
+              { x: new Date(1987, 1, 1), y: 257 },
+              { x: new Date(1993, 1, 1), y: 345 },
+              { x: new Date(1997, 1, 1), y: 515 },
+              { x: new Date(2001, 1, 1), y: 132 },
+              { x: new Date(2005, 1, 1), y: 305 },
+              { x: new Date(2011, 1, 1), y: 270 },
+              { x: new Date(2015, 1, 1), y: 470 }
+            ]}
           />
         </VictoryChart>
       </div>
